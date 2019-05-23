@@ -1,0 +1,73 @@
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+ 	<script type="text/javascript" src="js/influencers.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script>
+		$(function() {
+		   $( "#startDate" ).datepicker();
+		 });
+	</script>
+	<script>
+		$(function() {
+		   $( "#endDate" ).datepicker();
+		 });
+	</script>
+
+    <script type="text/javascript">
+		google.load("visualization", "1", {packages:['corechart', 'bar']});		
+		
+		function drawBarChart() {
+			$.getJSON("getTopUsers.do",
+					{startDate: $('#startDate').val(), endDate: $('#endDate').val(), clientID: $('#clientID').val()},
+					function(jsonData) {
+			
+		      var data = google.visualization.arrayToDataTable([
+		        ['Influencer', 'Positives By User', 'Positives By All Users', 'Negatives By User', 'Negatives By All Users'],	
+		        for (var i = 0; i < jsonData.length; i++) {
+		        	jsonData[i].screenName,  jsonData[i].positiveTweetCount, jsonData[i].positivesByAllUsers, jsonData[i].negativeTweetCount, jsonData[i].negativesByAllUsers],
+		        }
+		      ]);
+
+		      var options = {
+		        chart: {
+		          title: 'Top 2 Influencers Per Category',
+		          subtitle: 'Based on sentiments by all users'
+		        },
+		        hAxis: {
+		          title: 'Number of Sentiments',
+		          minValue: 0,
+		        },
+		        vAxis: {
+		          title: 'Top Influencers'
+		        },
+		        bars: 'horizontal',
+		        axes: {
+		          y: {
+		            0: {side: 'right'}
+		          }
+		        }
+		      };
+		      
+		      var chart = new google.charts.Bar(document.getElementById('barChart'));
+		      chart.draw(data, options);
+		    }
+		
+  </script>
+
+</head>
+<body>
+        Start Date: <input type="text" id="startDate" maxlength="10" value="" size="12" />
+        End Date: <input type="text" id="endDate" maxlength="10" value="" size="12">
+        ClientID: <input type="text" id="clientID" maxlength="4" value="" size="4">
+
+        <input type="button" value="Display Chart" onclick="drawBarChart;drawPositiveSeimiCircle"/>       
+		<div id="barChart" style="width: 900px; height: 500px;"></div>		
+		<div id="posSemiCircle" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>		
+		<div id="negSemiCircle" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+</body>
+</html>

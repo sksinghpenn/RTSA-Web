@@ -1,0 +1,119 @@
+<html>
+<head>
+	<style>
+		table, td, th {
+    			border: 1px solid green;
+		}
+
+		th {
+    			background-color: green;
+    			color: white;
+		}
+	</style>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script>
+		$(function() {
+		   $( "#startDate" ).datepicker();
+		 });
+	</script>
+	<script>
+		$(function() {
+		   $( "#endDate" ).datepicker();
+		 });
+	</script>
+    <script type="text/javascript">
+		google.load("visualization", "1", {packages:["corechart"]});
+
+		function getTopPositiveTweets() {
+
+			$.getJSON("getTopPositiveTweets.do",
+					{startDate: $('#startDate').val(), endDate: $('#endDate').val(), clientID: $('#clientID').val()},
+					function(jsonData) {                    
+						
+						var table = document.createElement('table');
+						var tr = document.createElement('tr');   
+
+					    var td1 = document.createElement('th');
+					    var td2 = document.createElement('th');
+					    var td3 = document.createElement('th');
+					    var td4 = document.createElement('th');
+					    
+					    var text1 = document.createTextNode('Seq. No');
+			 			var text2 = document.createTextNode('Date Time');
+						var text3 = document.createTextNode('Sentiment Index');
+			 			var text4 = document.createTextNode('Tweet Text');
+					    
+					    td1.appendChild(text1);						    
+					    td2.appendChild(text2);
+					    td3.appendChild(text3);
+					    td4.appendChild(text4);
+					    
+					    tr.appendChild(td1);
+					    tr.appendChild(td2);
+					    tr.appendChild(td3);
+					    tr.appendChild(td4);
+
+					    table.appendChild(tr);
+						    
+						for (var i = 0; i < jsonData.length; i++) {
+						    var tr = document.createElement('tr');   
+
+						    var td1 = document.createElement('td');
+						    var td2 = document.createElement('td');
+						    var td3 = document.createElement('td');
+						    var td4 = document.createElement('td');
+							
+						    var seq = i +1;
+						    var text1 = document.createTextNode(seq);
+						    
+						    var tweetDateJS = new Date(jsonData[i].tweetDateTime);						  
+						    var text2 = document.createTextNode(tweetDateJS);
+						    
+						    var text3 = document.createTextNode(jsonData[i].sentimentIndex);
+						    var text4 = document.createTextNode(jsonData[i].tweetText);
+						  
+						    
+						    td1.appendChild(text1);						    
+						    td2.appendChild(text2);
+						    td3.appendChild(text3);
+						    td4.appendChild(text4);
+						    
+						    tr.appendChild(td1);
+						    tr.appendChild(td2);
+						    tr.appendChild(td3);
+						    tr.appendChild(td4);
+
+						    table.appendChild(tr);
+						}
+						
+						var list  = document.getElementById("topTweets");
+						
+						while(list.hasChildNodes()) {
+							list.removeChild(list.firstChild);
+						}
+						
+						document.getElementById("topTweets").appendChild(table);
+						
+                    });
+		}
+  </script>
+</head>
+<body>
+
+
+        Start Date: <input type="text" id="startDate" maxlength="10" value="" size="12" />
+        End Date: <input type="text" id="endDate" maxlength="10" value="" size="12">
+        ClientID: <input type="text" id="clientID" maxlength="4" value="" size="4">
+
+        <input type="button" value="Display Chart" onclick="getTopPositiveTweets()"/>
+        <div id="topTweets" style="width: 1100px; height: 500px;"></div>
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,33 @@
+  
+        var data = google.visualization.arrayToDataTable([
+             
+             ['Flavour', 'Percent'],
+
+      ['Apple', 17.36],
+
+      ['Strawberry Rhubarb', 15.62],
+
+      ['Pumpkin', 13.63],
+
+      ['Cherry', 11.25],
+
+      ['Blueberry', 7.53],
+
+      ['Lemon Meringue', 6.45],
+
+      ['Chocolate', 3.97],
+
+      ['Chess', 1.46],
+
+      ['Other', 7.09]
+      ]);
+
+
+
+<%--
+                                                            ['Sentiment Type', 'Value'],
+                                                            <c:forEach items="${pieDataList}" var="entry">
+                                                                  [ '${entry.key}', ${entry.value} ],
+                                                            </c:forEach>
+                                                        ]);
+       --%>

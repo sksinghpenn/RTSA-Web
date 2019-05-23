@@ -1,0 +1,70 @@
+<html>
+<head>
+ 	<script src="js/jquery-min-1.4.2.js"></script>
+ 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+		
+		google.load('visualization', '1.1', {packages: ['line']});
+
+		function drawChart() {
+
+			$.getJSON("getDailyChartData.do",
+					{startDate: $('#startDate').val(), endDate: $('#endDate').val(), clientID: $('#clientID').val()},
+					function(jsonData) {
+						var data = new google.visualization.DataTable();    
+					      
+						data.addColumn('string','TweetDate');
+                        data.addColumn('number','Positive');
+                        data.addColumn('number','Negative');
+                        data.addColumn('number','Neutral');
+                        data.addColumn('number','Mixed');
+
+                                           
+						for (var i = 0; i < jsonData.length; i++) {
+ 							var tweetDateJS = new Date(jsonData[i].tweetDate);
+ 							var tweetDateForChart = (tweetDateJS.getMonth() + 1 )+ "/" + tweetDateJS.getDate() + "/" + tweetDateJS.getFullYear();
+							data.addRow([tweetDateForChart, jsonData[i].positiveSentimentIndexCount,
+                                         jsonData[i].negativeSentimentIndexCount, jsonData[i].neutralSentimentIndexCount,
+                                          jsonData[i].mixedSentimentIndexCount]);
+                        }
+
+
+					
+						
+						var options = {
+															        
+						          legend: 'none',
+						          series: {
+						            0: { color: '#e2431e' },
+						            1: { color: '#e7711b' },
+						            2: { color: '#f1ca3a' },
+						            3: { color: '#6f9654' },						          
+						          }					
+									
+						        };
+											
+						
+						var chart = new google.charts.Line(document.getElementById("lineChart"));
+						chart.draw(data, options);
+                    });
+		}
+  </script>
+</head>
+<body>
+
+
+        <div id="lineChart" style="width: 900px; height: 300px;"></div>
+
+
+        Start Date: <input type="text" id="startDate" maxlength="10" value="" size="12" />
+        End Date: <input type="text" id="endDate" maxlength="10" value="" size="12">
+        ClientID: <input type="text" id="clientID" maxlength="4" value="" size="4">
+
+        <input type="button" value="Display Chart" onclick="drawChart()"/>
+
+
+</body>
+</html>
+
+
